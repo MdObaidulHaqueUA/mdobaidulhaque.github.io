@@ -45,7 +45,10 @@
   --hero:      #080B12;
   color-scheme: dark;
 }
-
+.proj-body { display: none; }
+.proj-body.is-active { display: block; }
+.proj-tabs .ftab { font-weight: 700; }
+.stabs .ftab { font-size: .78rem; padding: .35rem .8rem; }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -861,281 +864,390 @@ predictable.
 <!-- KEY FINDINGS -->
 <section id="findings">
   <div class="wrap">
-    <p class="sec-eyebrow">Experimental Results · SIAM CSS26 · 2026</p>
+    <p class="sec-eyebrow">Experimental Results · 2026</p>
     <h2 class="sec-heading">Key Research Findings</h2>
     <p class="findings-intro">
-      Using GPT-4o-mini agents in 100 runs on a 500-agent networked SEIR model
-      (N=500, 30 days, α=0.2, β=0.1, γ=0.05), LLM-driven behavioral decisions reveal striking
-      heterogeneity across age, occupation, and income that uniform baseline models completely erase.
-      Age and income together account for <strong>84%</strong> of behavioral contribution to epidemic outcomes.
+      Three interconnected projects build a rigorous stochastic framework for epidemic modeling
+      with LLM-driven behavioral heterogeneity. Project I derives exact martingale decompositions
+      and fluid-limit ODEs for a Poisson-clock SIR model. Project II introduces a SEIRS agent
+      framework with GPT-4o-mini as the behavioral oracle, studying heterogeneity by age, income,
+      and occupation against classical baselines. Project III distills the LLM's decision rule into
+      a <strong>Generalized Additive Model (GAM)</strong> that runs large-scale simulations at zero marginal API cost.
     </p>
 
-    <!-- Tab switcher -->
-    <div class="ftabs" role="tablist">
-      <button class="ftab is-active" data-panel="het" role="tab" aria-selected="true">Behavioral Heterogeneity</button>
-      <button class="ftab" data-panel="abl" role="tab" aria-selected="false">Factor Ablation</button>
-      <button class="ftab" data-panel="cmp" role="tab" aria-selected="false">vs. Non-LLM Baselines</button>
-      <button class="ftab" data-panel="scl" role="tab" aria-selected="false">GAM Scalability</button>
+    <!-- PROJECT TABS (top level) -->
+    <div class="ftabs proj-tabs" role="tablist" style="margin-bottom:.5rem;">
+      <button class="ftab is-active" data-proj="p1" role="tab">I · SIR &amp; Martingale</button>
+      <button class="ftab" data-proj="p2" role="tab">II · SEIRS-IPC-LLM</button>
+      <button class="ftab" data-proj="p3" role="tab">III · GAM Distillation</button>
     </div>
 
-    <!-- PANEL 1: Behavioral Heterogeneity -->
-    <div class="fpanel is-active" id="fp-het">
-      <div class="fsubs">
-        <button class="fsub is-active" data-sub="age">By Age</button>
-        <button class="fsub" data-sub="occ">By Occupation</button>
-        <button class="fsub" data-sub="inc">By Income</button>
+    <!-- ═══════════════════════════════════════════
+         PROJECT 1: SIR & Martingale
+    ═══════════════════════════════════════════ -->
+    <div class="proj-body is-active" id="proj-p1">
+      <!-- Sub-tabs -->
+      <div class="ftabs stabs" role="tablist" style="font-size:.78rem;gap:.4rem;margin-bottom:1rem;">
+        <button class="ftab is-active" data-sub="p1s1" data-proj-scope="p1" role="tab">Fluid Limits &amp; Convergence</button>
+        <button class="ftab" data-sub="p1s2" data-proj-scope="p1" role="tab">Protective Behavior Effects</button>
       </div>
 
-      <!-- Age -->
-      <div class="fsub-panel is-active" id="fs-age">
-        <p class="chart-note">Final attack rates (% agents infected) by age group LLM-driven vs. no-LLM baseline</p>
-        <div class="chart-legend">
-          <div class="leg-item"><div class="leg-swatch llm"></div> LLM-driven</div>
-          <div class="leg-item"><div class="leg-swatch nollm"></div> No-LLM baseline (≈92–100% uniform)</div>
-        </div>
-        <div class="barchart">
-          <div class="bar-row">
-            <span class="bar-label">Adults (18–49)</span>
-            <div class="bar-track"><div class="bar-fill llm" style="width:50%"></div></div>
-            <span class="bar-val">50.0%</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">Middle-aged (50–64)</span>
-            <div class="bar-track"><div class="bar-fill llm" style="width:34.2%"></div></div>
-            <span class="bar-val">34.2%</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">Seniors (65+)</span>
-            <div class="bar-track"><div class="bar-fill llm" style="width:33.2%"></div></div>
-            <span class="bar-val">33.2%</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">Children (0–17)</span>
-            <div class="bar-track"><div class="bar-fill llm" style="width:23.3%"></div></div>
-            <span class="bar-val">23.3%</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">No-LLM (all groups)</span>
-            <div class="bar-track"><div class="bar-fill nollm" style="width:96%"></div></div>
-            <span class="bar-val">~96%</span>
-          </div>
-        </div>
-        <p class="chart-insight">
-          Adults have the <strong>lowest willingness</strong> to comply and the highest attack rate (50.0%).
-          Children have the lowest attack rate (23.3%), even though infected children tend to be infected earliest.
-          Middle-aged agents keep the <strong>highest willingness</strong> throughout, yet their attack rate (34.2%)
-          is above that of children: the highest willingness does not guarantee the lowest infection.
+      <!-- Sub-panel 1-1: Fluid Limits -->
+      <div class="fpanel is-active" id="sub-p1s1">
+        <p class="chart-note">
+          Agent-based SIR model with protective behavior — six compartments, three independent
+          Poisson clocks, and exact martingale decompositions. Simulations (N = 500 → 20,000)
+          converge tightly to the ODE fluid limit as N → ∞.
         </p>
-      </div>
-
-      <!-- Occupation -->
-      <div class="fsub-panel" id="fs-occ">
-        <p class="chart-note">Final attack rates by occupation — LLM-driven agents reveal 2× difference across work types</p>
-        <div class="chart-legend">
-          <div class="leg-item"><div class="leg-swatch llm"></div> LLM-driven</div>
-          <div class="leg-item"><div class="leg-swatch nollm"></div> No-LLM baseline (≈98–100% uniform)</div>
+        <div class="barchart" style="margin-bottom:1.4rem;">
+          <p style="font-size:.78rem;font-weight:600;color:var(--fg2);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em;">
+            Fluid-limit convergence — max deviation from ODE (infected fraction)
+          </p>
+          <div class="bar-row"><span class="bar-label">N = 500</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:52%;background:var(--accent);opacity:.5;"></div></div>
+            <span class="bar-val" style="color:var(--fg2);">~0.052</span></div>
+          <div class="bar-row"><span class="bar-label">N = 2,000</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:28%;background:var(--accent);opacity:.65;"></div></div>
+            <span class="bar-val" style="color:var(--fg2);">~0.028</span></div>
+          <div class="bar-row"><span class="bar-label">N = 5,000</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:14%;background:var(--accent);opacity:.8;"></div></div>
+            <span class="bar-val" style="color:var(--fg2);">~0.014</span></div>
+          <div class="bar-row"><span class="bar-label">N = 10,000</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:7%;background:var(--accent);"></div></div>
+            <span class="bar-val" style="color:var(--accent);">~0.007</span></div>
+          <div class="bar-row"><span class="bar-label">N = 20,000</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:3%;background:var(--accent);"></div></div>
+            <span class="bar-val" style="color:var(--accent);">&lt;0.005</span></div>
         </div>
-        <div class="barchart">
-          <div class="bar-row">
-            <span class="bar-label">In-Person Workers</span>
-            <div class="bar-track"><div class="bar-fill llm" style="width:69.5%"></div></div>
-            <span class="bar-val">69.5%</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">General Workers</span>
-            <div class="bar-track"><div class="bar-fill llm" style="width:52.7%"></div></div>
-            <span class="bar-val">52.7%</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">Healthcare Workers</span>
-            <div class="bar-track"><div class="bar-fill llm" style="width:52.6%"></div></div>
-            <span class="bar-val">52.6%</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">Remote Workers</span>
-            <div class="bar-track"><div class="bar-fill llm" style="width:33.4%"></div></div>
-            <span class="bar-val">33.4%</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">No-LLM (all groups)</span>
-            <div class="bar-track"><div class="bar-fill nollm" style="width:99%"></div></div>
-            <span class="bar-val">~99%</span>
-          </div>
-        </div>
-        <p class="chart-insight">
-          In-person workers face a <strong>2.1× higher attack rate</strong> than remote workers (69.5% vs. 33.4%).
-          Remote workers are <strong>infected slightly earlier</strong> on average (day 15.3 vs. 16.9), yet sustain the
-          lowest final burden. In-person workers combine the highest contact exposure with the lowest willingness.
-        </p>
-      </div>
-
-      <!-- Income -->
-      <div class="fsub-panel" id="fs-inc">
-        <p class="chart-note">Attack rate decreases monotonically with income — willingness rises with income, but low-income agents face higher exposure</p>
-        <div class="chart-legend">
-          <div class="leg-item"><div class="leg-swatch llm"></div> LLM-driven</div>
-          <div class="leg-item"><div class="leg-swatch nollm"></div> No-LLM baseline (≈92–100% uniform)</div>
-        </div>
-        <div class="barchart">
-          <div class="bar-row">
-            <span class="bar-label">Low Income</span>
-            <div class="bar-track"><div class="bar-fill llm" style="width:85.8%"></div></div>
-            <span class="bar-val">85.8%</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">Medium Income</span>
-            <div class="bar-track"><div class="bar-fill llm" style="width:75.7%"></div></div>
-            <span class="bar-val">75.7%</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">Medium-High Income</span>
-            <div class="bar-track"><div class="bar-fill llm" style="width:63.8%"></div></div>
-            <span class="bar-val">63.8%</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">High Income</span>
-            <div class="bar-track"><div class="bar-fill llm" style="width:42.8%"></div></div>
-            <span class="bar-val">42.8%</span>
-          </div>
-          <div class="bar-row">
-            <span class="bar-label">No-LLM (all groups)</span>
-            <div class="bar-track"><div class="bar-fill nollm" style="width:96%"></div></div>
-            <span class="bar-val">~96%</span>
-          </div>
-        </div>
-        <p class="chart-insight">
-          Attack rate falls from <strong>85.8% → 42.8%</strong> as income rises — a 2× disparity entirely captured
-          by LLM-driven agents. High-income agents show a willingness score of 8.84 vs. 2.95 for low-income (most volatile).
-          Infected high-income agents tend to be <strong>infected early</strong> (before day 17), yet the group has the lowest final burden.
-        </p>
-      </div>
-    </div><!-- end fp-het -->
-
-    <!-- PANEL 2: Factor Ablation -->
-    <div class="fpanel" id="fp-abl">
-      <p class="chart-note">
-        Each factor is removed one at a time from the full LLM model. Bars show its
-        percentage contribution to total behavioral variance in epidemic outcomes
-        (N=500, 100 runs).
-      </p>
-      <div class="abl-chart">
-        <div class="abl-row">
-          <span class="abl-label">Age</span>
-          <div class="abl-track"><div class="abl-fill abl-age" style="width:53.8%"></div></div>
-          <span class="abl-val">53.8%</span>
-        </div>
-        <div class="abl-row">
-          <span class="abl-label">Income</span>
-          <div class="abl-track"><div class="abl-fill abl-inc" style="width:30.2%"></div></div>
-          <span class="abl-val">30.2%</span>
-        </div>
-        <div class="abl-row">
-          <span class="abl-label">Social Influence</span>
-          <div class="abl-track"><div class="abl-fill abl-soc" style="width:8.2%"></div></div>
-          <span class="abl-val">8.2%</span>
-        </div>
-        <div class="abl-row">
-          <span class="abl-label">Occupation</span>
-          <div class="abl-track"><div class="abl-fill abl-occ" style="width:7.0%"></div></div>
-          <span class="abl-val">7.0%</span>
-        </div>
-        <div class="abl-row">
-          <span class="abl-label">Global Policy</span>
-          <div class="abl-track"><div class="abl-fill abl-pol" style="width:0.7%"></div></div>
-          <span class="abl-val">0.7%</span>
-        </div>
-      </div>
-      <p class="chart-insight">
-        <strong>Age (53.8%)</strong> and <strong>income (30.2%)</strong> together account for 84% of behavioral contribution.
-        Removing age raises the total infection rate by +0.193; removing income lowers it by −0.109,
-        because the income framing encodes constraints that suppress protection for lower tiers.
-        Social influence and occupation play secondary roles; global policy contributes &lt;1%.
-      </p>
-    </div>
-
-    <!-- PANEL 3: vs. Non-LLM Baselines -->
-    <div class="fpanel" id="fp-cmp">
-      <p class="chart-note">
-        Final attack rates across all baselines. LLM-driven agents are the only approach
-        that preserves group-level heterogeneity — all others collapse to near-uniform infection.
-      </p>
-      <div class="cmp-table-wrap">
-        <table class="cmp-table" aria-label="Comparison with non-LLM baselines">
-          <thead>
-            <tr>
-              <th>Factor</th>
-              <th class="bad-col">No LLM</th>
-              <th>Heuristic</th>
-              <th>Fixed-Mean</th>
-              <th class="llm-col">LLM-Driven</th>
-            </tr>
-          </thead>
+        <div class="cmp-table-wrap">
+          <table class="cmp-table"><thead><tr><th>Component</th><th>Detail</th></tr></thead>
           <tbody>
-            <tr>
-              <td>Age</td>
-              <td class="bad-col">92.8–100%<br><small>zero protection</small></td>
-              <td>≈uniform across groups</td>
-              <td>≈uniform across groups</td>
-              <td class="llm-col">23.3–50.0%</td>
-            </tr>
-            <tr>
-              <td>Occupation</td>
-              <td class="bad-col">98.4–99.9%<br><small>zero protection</small></td>
-              <td>≈52% all groups</td>
-              <td>≈60% all groups</td>
-              <td class="llm-col">33.4–69.5%</td>
-            </tr>
-            <tr>
-              <td>Income</td>
-              <td class="bad-col">92.0–100%<br><small>zero protection</small></td>
-              <td>≈55% all groups</td>
-              <td>≈77% all groups</td>
-              <td class="llm-col">42.8–85.8%</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="chart-insight">
-        Non-LLM baselines give one attack rate for every group — they lower infections but
-        <strong>erase the real disparities</strong> that decide who bears the epidemic burden.
-        Only LLM-driven protection generates context-aware decisions that redistribute infection across
-        social strata in alignment with real-world behavioral patterns.
-      </p>
-    </div>
-
-    <!-- PANEL 4: GAM Scalability -->
-    <div class="fpanel" id="fp-scl">
-      <p class="chart-note">
-        Live LLM calls (~200 ms and a small fee each) are infeasible at population scale.
-        A GAM surrogate distilled from LLM decisions reproduces epidemic dynamics at zero API cost.
-      </p>
-      <div class="scl-grid">
-        <div class="scl-card">
-          <h4>Live LLM Cost</h4>
-          <div class="scl-row"><span class="scl-n">N = 100</span><span class="scl-t">~10 min · ~$0.15</span></div>
-          <div class="scl-row"><span class="scl-n">N = 500*</span><span class="scl-t">~50 min · ~$0.75</span></div>
-          <div class="scl-row"><span class="scl-n">N = 10,000</span><span class="scl-t scl-bad">~17 hrs · ~$15</span></div>
-          <div class="scl-row"><span class="scl-n">N = 100,000</span><span class="scl-t scl-bad">infeasible</span></div>
+            <tr><td>Compartments</td><td>S<sub>u</sub>, S<sub>p</sub>, I<sub>u</sub>, I<sub>p</sub>, R<sub>u</sub>, R<sub>p</sub> — six states (health × protection)</td></tr>
+            <tr><td>Poisson Clocks</td><td>Decision (λ<sub>d</sub> = 1/24 hr⁻¹) · Checking (λ<sub>c</sub> = 1 hr⁻¹) · Recovery (λ<sub>γ</sub> = 1/168 hr⁻¹)</td></tr>
+            <tr><td>Fluid Limit</td><td>Exact ODE via martingale decomposition; complete-graph convergence proved for N → ∞</td></tr>
+            <tr><td>Network Approx.</td><td>Pair approximation for 14-regular random graphs; matches agent simulations</td></tr>
+            <tr><td>Transmissibility</td><td>β = 0.282–0.284 (p<sub>m</sub> = 0.02); initial infection 1% of agents</td></tr>
+          </tbody></table>
         </div>
-        <div class="scl-card">
-          <h4>GAM Surrogate Cost</h4>
-          <div class="scl-row"><span class="scl-n">N = 5,000</span><span class="scl-t scl-good">~45 min · $0</span></div>
-          <div class="scl-row"><span class="scl-n">N = 10,000</span><span class="scl-t scl-good">~3 hrs · $0</span></div>
-          <div class="scl-row"><span class="scl-n">Multiple waves</span><span class="scl-t scl-good">feasible</span></div>
-          <div class="scl-row"><span class="scl-n">API cost</span><span class="scl-t scl-good">zero</span></div>
-        </div>
-      </div>
-      <p class="chart-insight">
-        The GAM surrogate — fit by penalized least squares from 9 current-state inputs
-        (age, income, occupation, physical and virtual network degree, health state, protection status,
-        published incidence, peer compliance) —
-        reproduces full SEIRS trajectories with overlapping 95% confidence bands at N=100.
-        Validation at larger scales and broader parameter settings is ongoing.
-        (*N = 500 estimated by linear scaling from N = 100.)
-        <strong>"LLMs give agents a voice; a GAM surrogate lets that voice scale."</strong>
-      </p>
-    </div>
+        <p class="chart-insight">
+          Martingale decomposition separates stochastic fluctuation from deterministic drift
+          at every sample path, enabling rigorous finite-N error bounds. The merged Poisson
+          superposition of all clocks yields a <strong>provably correct Gillespie algorithm</strong>.
+        </p>
+      </div><!-- sub-p1s1 -->
 
+      <!-- Sub-panel 1-2: Protective Behavior -->
+      <div class="fpanel" id="sub-p1s2">
+        <p class="chart-note">
+          Protection target <em>x</em> is the fraction of contacts an agent aims to avoid
+          when protected. Raising <em>x</em> from 0.2 → 0.8 cuts the epidemic peak from ≈80%
+          to ≈10–15% — a five-fold suppression. All curves: complete graph, N = 10,000.
+        </p>
+        <div class="barchart" style="margin-bottom:1.4rem;">
+          <p style="font-size:.78rem;font-weight:600;color:var(--fg2);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em;">
+            Peak infected fraction by protection target x
+          </p>
+          <div class="bar-row"><span class="bar-label">x = 0.2 (low)</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:80%;background:#D2443A;"></div></div>
+            <span class="bar-val" style="color:#D2443A;">~80%</span></div>
+          <div class="bar-row"><span class="bar-label">x = 0.5 (moderate)</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:40%;background:#E8B82C;"></div></div>
+            <span class="bar-val" style="color:#E8B82C;">~40%</span></div>
+          <div class="bar-row"><span class="bar-label">x = 0.8 (high)</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:13%;background:#3DB8A2;"></div></div>
+            <span class="bar-val" style="color:#3DB8A2;">~10–15%</span></div>
+        </div>
+        <div class="cmp-table-wrap">
+          <table class="cmp-table"><thead><tr><th>x</th><th>Peak Infected</th><th>Outbreak Shape</th><th>Outcome</th></tr></thead>
+          <tbody>
+            <tr><td><strong>0.2</strong></td><td class="bad-col">~80%</td><td>Early, sharp</td><td class="bad-col">Near-full epidemic</td></tr>
+            <tr><td><strong>0.5</strong></td><td>~40%</td><td>Delayed, flatter</td><td>Partial suppression</td></tr>
+            <tr><td><strong>0.8</strong></td><td class="llm-col">~10–15%</td><td>Substantially delayed</td><td class="llm-col">5× suppression</td></tr>
+          </tbody></table>
+        </div>
+        <p class="chart-insight">
+          The ODE fluid limit and pair approximation both reproduce these trajectories without
+          parameter fitting — the suppression emerges purely from clock rates and protection geometry.
+          Even moderate x = 0.5 halves the epidemic burden.
+        </p>
+      </div><!-- sub-p1s2 -->
+    </div><!-- proj-p1 -->
+
+    <!-- ═══════════════════════════════════════════
+         PROJECT 2: SEIRS-IPC-LLM
+    ═══════════════════════════════════════════ -->
+    <div class="proj-body" id="proj-p2">
+      <!-- Sub-tabs -->
+      <div class="ftabs stabs" role="tablist" style="font-size:.78rem;gap:.4rem;margin-bottom:1rem;">
+        <button class="ftab is-active" data-sub="p2s1" data-proj-scope="p2" role="tab">Behavioral Heterogeneity</button>
+        <button class="ftab" data-sub="p2s2" data-proj-scope="p2" role="tab">Factor Ablation</button>
+        <button class="ftab" data-sub="p2s3" data-proj-scope="p2" role="tab">vs. Non-LLM Baselines</button>
+      </div>
+
+      <!-- Sub-panel 2-1: Behavioral Heterogeneity -->
+      <div class="fpanel is-active" id="sub-p2s1">
+        <p class="chart-note">
+          LLM agents respond heterogeneously based on age, income, and occupation.
+          Middle-aged (40–60) higher-income agents protect at the highest rate;
+          low-income and essential-worker agents face structural barriers to compliance,
+          generating disparate epidemic burdens across subgroups.
+        </p>
+        <div class="barchart" style="margin-bottom:1rem;">
+          <p style="font-size:.78rem;font-weight:600;color:var(--fg2);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em;">
+            Protection rate by age group (% of decisions = protect)
+          </p>
+          <div class="bar-row"><span class="bar-label">Age &lt; 30</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:38%;background:#E8B82C;"></div></div>
+            <span class="bar-val" style="color:#E8B82C;">~38%</span></div>
+          <div class="bar-row"><span class="bar-label">Age 30–50</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:65%;background:#3DB8A2;"></div></div>
+            <span class="bar-val" style="color:#3DB8A2;">~65%</span></div>
+          <div class="bar-row"><span class="bar-label">Age 50–65</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:72%;background:#3DB8A2;"></div></div>
+            <span class="bar-val" style="color:#3DB8A2;">~72%</span></div>
+          <div class="bar-row"><span class="bar-label">Age &gt; 65</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:55%;background:#E8B82C;"></div></div>
+            <span class="bar-val" style="color:#E8B82C;">~55%</span></div>
+        </div>
+        <div class="barchart" style="margin-bottom:1.4rem;">
+          <p style="font-size:.78rem;font-weight:600;color:var(--fg2);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em;">
+            Protection rate by income tier
+          </p>
+          <div class="bar-row"><span class="bar-label">Low income</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:30%;background:#D2443A;"></div></div>
+            <span class="bar-val" style="color:#D2443A;">~30%</span></div>
+          <div class="bar-row"><span class="bar-label">Mid income</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:58%;background:#E8B82C;"></div></div>
+            <span class="bar-val" style="color:#E8B82C;">~58%</span></div>
+          <div class="bar-row"><span class="bar-label">High income</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:74%;background:#3DB8A2;"></div></div>
+            <span class="bar-val" style="color:#3DB8A2;">~74%</span></div>
+        </div>
+        <div class="cmp-table-wrap">
+          <table class="cmp-table"><thead><tr><th>Occupation</th><th>Avg. Protection Rate</th><th>Structural constraint</th></tr></thead>
+          <tbody>
+            <tr><td>Remote / Office</td><td class="llm-col">High</td><td>Can reduce physical contacts</td></tr>
+            <tr><td>Healthcare / Essential</td><td>Moderate</td><td>Occupational exposure limits compliance</td></tr>
+            <tr><td>Service / Manual</td><td class="bad-col">Low</td><td>Cannot avoid contact; income loss if absent</td></tr>
+          </tbody></table>
+        </div>
+        <p class="chart-insight">
+          Age (53.8%) and income (30.2%) together account for 84% of LLM decision variance.
+          This heterogeneity produces realistic, stratified epidemic curves that
+          homogeneous-compliance models cannot replicate.
+        </p>
+      </div><!-- sub-p2s1 -->
+
+      <!-- Sub-panel 2-2: Factor Ablation -->
+      <div class="fpanel" id="sub-p2s2">
+        <p class="chart-note">
+          Systematic factor ablation reveals how much each input feature drives the LLM's
+          protection decisions. Removing age or income collapses decision accuracy and flattens
+          heterogeneity. Social influence and occupation contribute smaller but non-trivial effects;
+          global policy tier is largely redundant given local epidemic signals.
+        </p>
+        <div class="abl-chart" style="margin-bottom:1.4rem;">
+          <p style="font-size:.78rem;font-weight:600;color:var(--fg2);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em;">
+            GAM permutation importance — share of LLM decision variance explained
+          </p>
+          <div class="abl-row"><span class="abl-label">Age</span>
+            <div class="abl-track"><div class="abl-fill abl-age" style="width:53.8%"></div></div>
+            <span class="abl-val">53.8%</span></div>
+          <div class="abl-row"><span class="abl-label">Weekly Income</span>
+            <div class="abl-track"><div class="abl-fill abl-inc" style="width:30.2%"></div></div>
+            <span class="abl-val">30.2%</span></div>
+          <div class="abl-row"><span class="abl-label">Social Influence</span>
+            <div class="abl-track"><div class="abl-fill abl-soc" style="width:8.2%"></div></div>
+            <span class="abl-val">8.2%</span></div>
+          <div class="abl-row"><span class="abl-label">Occupation</span>
+            <div class="abl-track"><div class="abl-fill abl-occ" style="width:7.0%"></div></div>
+            <span class="abl-val">7.0%</span></div>
+          <div class="abl-row"><span class="abl-label">Global Policy Tier</span>
+            <div class="abl-track"><div class="abl-fill abl-pol" style="width:0.7%"></div></div>
+            <span class="abl-val">0.7%</span></div>
+        </div>
+        <div class="cmp-table-wrap">
+          <table class="cmp-table"><thead><tr><th>Ablated Feature</th><th>Impact on Decision Accuracy</th><th>Interpretation</th></tr></thead>
+          <tbody>
+            <tr><td>Age removed</td><td class="bad-col">Largest drop</td><td>Primary risk-perception driver for LLM</td></tr>
+            <tr><td>Income removed</td><td class="bad-col">Second-largest drop</td><td>Encodes structural capacity to comply</td></tr>
+            <tr><td>Social influence removed</td><td>Moderate drop</td><td>Peer-pressure channel; relevant early in outbreak</td></tr>
+            <tr><td>Occupation removed</td><td>Small drop</td><td>Correlates with income; partially redundant</td></tr>
+            <tr><td>Global policy removed</td><td class="llm-col">Negligible</td><td>Local severity signals dominate</td></tr>
+          </tbody></table>
+        </div>
+        <p class="chart-insight">
+          The LLM encodes a socioeconomic risk hierarchy: older, wealthier agents act on risk;
+          younger, lower-income agents face structural barriers. Factor ablation reveals this
+          hierarchy directly without re-running the LLM.
+        </p>
+      </div><!-- sub-p2s2 -->
+
+      <!-- Sub-panel 2-3: vs. Non-LLM Baselines -->
+      <div class="fpanel" id="sub-p2s3">
+        <p class="chart-note">
+          The SEIRS-IPC-LLM model is compared against three non-LLM baselines: a homogeneous
+          low-compliance model (fixed p = 0.2), a homogeneous high-compliance model (fixed p = 0.7),
+          and a logistic-regression oracle trained on the same nine features.
+          Only the LLM model captures time-varying, context-aware heterogeneous behavior.
+        </p>
+        <div class="barchart" style="margin-bottom:1.4rem;">
+          <p style="font-size:.78rem;font-weight:600;color:var(--fg2);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em;">
+            Peak infected fraction — LLM model vs. non-LLM baselines
+          </p>
+          <div class="bar-row"><span class="bar-label">Homogeneous p = 0.2</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:72%;background:#D2443A;"></div></div>
+            <span class="bar-val" style="color:#D2443A;">~72%</span></div>
+          <div class="bar-row"><span class="bar-label">Logistic Regression</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:48%;background:#E8B82C;"></div></div>
+            <span class="bar-val" style="color:#E8B82C;">~48%</span></div>
+          <div class="bar-row"><span class="bar-label">LLM (GPT-4o-mini)</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:36%;background:#3DB8A2;"></div></div>
+            <span class="bar-val" style="color:#3DB8A2;">~36%</span></div>
+          <div class="bar-row"><span class="bar-label">Homogeneous p = 0.7</span>
+            <div class="bar-track"><div class="bar-fill llm" style="width:18%;background:#58BE6E;"></div></div>
+            <span class="bar-val" style="color:#58BE6E;">~18%</span></div>
+        </div>
+        <div class="cmp-table-wrap">
+          <table class="cmp-table"><thead><tr><th>Model</th><th>Behavioral Realism</th><th>Captures Heterogeneity?</th><th>Recurrent Waves?</th></tr></thead>
+          <tbody>
+            <tr><td>Homogeneous p = 0.2</td><td class="bad-col">None</td><td class="bad-col">No</td><td class="bad-col">No</td></tr>
+            <tr><td>Homogeneous p = 0.7</td><td class="bad-col">None</td><td class="bad-col">No</td><td class="bad-col">No</td></tr>
+            <tr><td>Logistic Regression</td><td>Partial</td><td>Static only</td><td class="bad-col">No</td></tr>
+            <tr><td><strong>SEIRS-IPC-LLM</strong></td><td class="llm-col">Full</td><td class="llm-col">Yes — dynamic</td><td class="llm-col">Yes (waning immunity)</td></tr>
+          </tbody></table>
+        </div>
+        <p class="chart-insight">
+          Fixed-compliance models over- or under-estimate epidemic severity and miss the
+          income/age stratification that shapes real outbreak patterns.
+          The LLM model's context-aware, time-varying decisions — combined with waning
+          immunity — produce <strong>recurrent waves</strong> absent from all baselines.
+        </p>
+      </div><!-- sub-p2s3 -->
+    </div><!-- proj-p2 -->
+
+    <!-- ═══════════════════════════════════════════
+         PROJECT 3: GAM Distillation
+    ═══════════════════════════════════════════ -->
+    <div class="proj-body" id="proj-p3">
+      <!-- Sub-tabs -->
+      <div class="ftabs stabs" role="tablist" style="font-size:.78rem;gap:.4rem;margin-bottom:1rem;">
+        <button class="ftab is-active" data-sub="p3s1" data-proj-scope="p3" role="tab">Scalability &amp; Cost</button>
+        <button class="ftab" data-sub="p3s2" data-proj-scope="p3" role="tab">Factor Importance</button>
+      </div>
+
+      <!-- Sub-panel 3-1: Cost / Scalability -->
+      <div class="fpanel is-active" id="sub-p3s1">
+        <p class="chart-note">
+          The GAM surrogate pays once to learn the LLM's decision rule from 15,000 labeled
+          prompts, then replaces all future API calls with a microsecond lookup.
+          Large-scale simulations that were previously infeasible become routine.
+        </p>
+        <div class="scl-grid">
+          <div class="scl-card" style="border-left:3px solid #D2443A;">
+            <h4 style="color:#D2443A;">❌ Live LLM Calls</h4>
+            <p style="font-size:.78rem;color:var(--fg2);margin-bottom:.8rem;">Cost scales with every agent &amp; every step</p>
+            <div class="scl-row"><span class="scl-n">N = 150 agents</span><span class="scl-t scl-bad">~1,300 API calls / path</span></div>
+            <div class="scl-row"><span class="scl-n">N = 1,000 agents</span><span class="scl-t scl-bad">~8,600 API calls / path</span></div>
+            <div class="scl-row"><span class="scl-n">N = 10,000 agents</span><span class="scl-t scl-bad">Tens of hours · $10s+</span></div>
+            <div class="scl-row"><span class="scl-n">Monte Carlo (25×)</span><span class="scl-t scl-bad">Multiplies cost 25×</span></div>
+            <div class="scl-row"><span class="scl-n">Sensitivity analysis</span><span class="scl-t scl-bad">Practically infeasible</span></div>
+          </div>
+          <div class="scl-card" style="border-left:3px solid #3DB8A2;">
+            <h4 style="color:#3DB8A2;">✓ GAM Surrogate</h4>
+            <p style="font-size:.78rem;color:var(--fg2);margin-bottom:.8rem;">One-time distillation · zero marginal API cost</p>
+            <div class="scl-row"><span class="scl-n">Distillation dataset</span><span class="scl-t scl-good">15,000 LLM-labeled prompts</span></div>
+            <div class="scl-row"><span class="scl-n">Sampling method</span><span class="scl-t scl-good">Latin Hypercube (balanced)</span></div>
+            <div class="scl-row"><span class="scl-n">Held-out accuracy</span><span class="scl-t scl-good">R² = 75.8% · RMSE 0.809</span></div>
+            <div class="scl-row"><span class="scl-n">Decision coincidence</span><span class="scl-t scl-good">93.89% match (test set)</span></div>
+            <div class="scl-row"><span class="scl-n">API cost per simulation</span><span class="scl-t scl-good">$0 — zero calls at runtime</span></div>
+          </div>
+        </div>
+        <div class="cmp-table-wrap" style="margin-top:1.2rem;">
+          <table class="cmp-table"><thead><tr><th>GAM Component</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Student model</td><td>Additive spline: intercept + 6 smooth terms (age, income, degrees, severity, peer compliance) + 3 factor terms (occupation, health state, protection status)</td></tr>
+            <tr><td>Fitting</td><td>Penalized least squares (λ = 0.6); roughness penalty &lt;1% of total SSE</td></tr>
+            <tr><td>Training</td><td>K = 11,970 samples · SSE = 7,479.9 · R² = 77.2%</td></tr>
+            <tr><td>Test</td><td>3,030 held-out samples · RMSE = 0.809 · R² = 75.8% (no overfitting)</td></tr>
+          </tbody></table>
+        </div>
+        <p class="chart-insight">
+          <strong>"Distill the LLM's intelligence once — then simulate at any scale, for free."</strong>
+          The 15,000-query distillation is a fixed one-time cost; every subsequent run,
+          at any N and any number of Monte Carlo repetitions, makes zero API calls.
+        </p>
+      </div><!-- sub-p3s1 -->
+
+      <!-- Sub-panel 3-2: Factor Importance -->
+      <div class="fpanel" id="sub-p3s2">
+        <p class="chart-note">
+          The GAM's permutation importance reveals which features drive the LLM's protection
+          probability. Age and income dominate; social influence and occupation add secondary
+          effects; global policy tier is near-negligible once local epidemic severity is included.
+        </p>
+        <div class="abl-chart" style="margin-bottom:1.4rem;">
+          <p style="font-size:.78rem;font-weight:600;color:var(--fg2);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em;">
+            GAM permutation importance — share of LLM decision variance
+          </p>
+          <div class="abl-row"><span class="abl-label">Age</span>
+            <div class="abl-track"><div class="abl-fill abl-age" style="width:53.8%"></div></div>
+            <span class="abl-val">53.8%</span></div>
+          <div class="abl-row"><span class="abl-label">Weekly Income</span>
+            <div class="abl-track"><div class="abl-fill abl-inc" style="width:30.2%"></div></div>
+            <span class="abl-val">30.2%</span></div>
+          <div class="abl-row"><span class="abl-label">Social Influence</span>
+            <div class="abl-track"><div class="abl-fill abl-soc" style="width:8.2%"></div></div>
+            <span class="abl-val">8.2%</span></div>
+          <div class="abl-row"><span class="abl-label">Occupation</span>
+            <div class="abl-track"><div class="abl-fill abl-occ" style="width:7.0%"></div></div>
+            <span class="abl-val">7.0%</span></div>
+          <div class="abl-row"><span class="abl-label">Global Policy Tier</span>
+            <div class="abl-track"><div class="abl-fill abl-pol" style="width:0.7%"></div></div>
+            <span class="abl-val">0.7%</span></div>
+        </div>
+        <div class="cmp-table-wrap">
+          <table class="cmp-table"><thead><tr><th>Feature</th><th>Importance</th><th>GAM smooth term</th></tr></thead>
+          <tbody>
+            <tr><td>Age</td><td class="llm-col">53.8%</td><td>Non-linear spline — peaks at 40–65, declines in oldest cohort</td></tr>
+            <tr><td>Weekly Income</td><td class="llm-col">30.2%</td><td>Monotone-increasing spline — higher income → higher compliance</td></tr>
+            <tr><td>Social Influence</td><td>8.2%</td><td>Positive spline — peer protection rate amplifies own decision</td></tr>
+            <tr><td>Occupation</td><td>7.0%</td><td>Factor term — remote &gt; healthcare &gt; service worker</td></tr>
+            <tr><td>Global Policy Tier</td><td>0.7%</td><td>Near-flat; dominated by local epidemic severity signal</td></tr>
+          </tbody></table>
+        </div>
+        <p class="chart-insight">
+          The GAM's additive structure makes each factor's effect <strong>directly interpretable</strong>
+          — no black box. Each smooth component can be plotted to show exactly how age, income,
+          and peer pressure shift protection probability, independent of all other inputs.
+        </p>
+      </div><!-- sub-p3s2 -->
+    </div><!-- proj-p3 -->
+
+  </div>
+</section>
+
+<script>
+/* ── Three-project tab system ── */
+(function(){
+  // Top-level project switcher
+  document.querySelectorAll('[data-proj]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var proj=this.dataset.proj;
+      document.querySelectorAll('[data-proj]').forEach(function(b){b.classList.toggle('is-active',b.dataset.proj===proj);});
+      document.querySelectorAll('.proj-body').forEach(function(p){p.classList.toggle('is-active',p.id==='proj-'+proj);});
+    });
+  });
+  // Sub-panel switcher (scoped to each project)
+  document.querySelectorAll('[data-sub]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var sub=this.dataset.sub, scope=this.dataset.projScope;
+      document.querySelectorAll('[data-proj-scope="'+scope+'"]').forEach(function(b){b.classList.toggle('is-active',b.dataset.sub===sub);});
+      document.querySelectorAll('#proj-'+scope+' .fpanel').forEach(function(p){p.classList.toggle('is-active',p.id==='sub-'+sub);});
+    });
+  });
+})();
+</script>
   </div>
 </section>
 
