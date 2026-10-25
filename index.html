@@ -708,9 +708,8 @@ footer p { color: rgba(255,255,255,.28); font-size: .83rem; }
 
     <p class="research-body">
       Every few generations, a deadly pandemic reshapes society: the 1918 influenza caused an
-      estimated fifty million deaths, and COVID-19 about fifteen million excess deaths in its first
-      two years. Because the stakes are so high, governments rely on models. In March 2020, the
-      Imperial College model projected half a million deaths in the UK and over two million in the
+      estimated fifty million deaths, and COVID-19 caused about fifteen million excess deaths in its first
+      two years. In March 2020, the Imperial College model projected half a million deaths in the UK and over two million in the
       US without control measures, and those projections shaped the early lockdowns. Yet every such
       prediction depends on something very hard to model: how people behave.
     </p>
@@ -725,7 +724,7 @@ footer p { color: rgba(255,255,255,.28); font-size: .83rem; }
     </p>
 
     <p class="research-body">
-      My first thread embeds large language models (LLMs) as the behavioral engines of agents on a
+      My first research project embeds large language models (LLMs) as the behavioral engines of agents on a
       contact network. The LLM reads each agent's demographic profile and the local epidemic state,
       then decides how strongly that person protects themselves. This produces demographically
       structured infection burdens across age, occupation, and income groups that homogeneous and
@@ -733,7 +732,7 @@ footer p { color: rgba(255,255,255,.28); font-size: .83rem; }
     </p>
 
     <p class="research-body">
-      My second thread reformulates the framework as a continuous-time stochastic SEIRS model driven
+      The second project reformulates the framework as a continuous-time stochastic SEIRS model driven
       by independent Poisson clocks. Because querying an LLM for every decision is slow and costly, I
       distill its behavioral rule into an interpretable Generalized Additive Model (GAM). In
       preliminary validation, the GAM reproduces the LLM-driven dynamics and makes simulations with
@@ -741,10 +740,14 @@ footer p { color: rgba(255,255,255,.28); font-size: .83rem; }
     </p>
 
     <p class="research-body">
-      My third thread builds the mathematical foundations: martingale formulations on
-      <em>complete</em> and <em>incomplete</em> networks that separate population-level drift from
-      random fluctuations, together with large-population scaling and pair approximations that
-      connect agent-level behavior to population-level predictions.
+     My third one builds the mathematical foundations: for an agent-based epidemic model
+in which individuals switch protective behavior on and off, I derive martingale
+formulations on <em>complete</em> and <em>incomplete</em> contact networks that split
+each population quantity into a deterministic drift and a random fluctuation. I prove
+that these fluctuations shrink like 1/N with population size, which yields the
+large-population limit on complete networks and a pair approximation on sparse ones,
+and shows how small populations and local contact structure make epidemics less
+predictable.
     </p>
 
     <div class="tags">
@@ -1305,6 +1308,8 @@ footer p { color: rgba(255,255,255,.28); font-size: .83rem; }
       <div class="contact-item">
         <span class="contact-label">Email</span>
         <span class="contact-val">mhaque7@crimson.ua.edu</span>
+        <span class="contact-label">Phone</span>
+        <span class="contact-val">+1(659)-228-1850</span>
       </div>
       <div class="contact-item">
         <span class="contact-label">Office</span>
